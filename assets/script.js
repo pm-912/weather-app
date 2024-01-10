@@ -1,4 +1,4 @@
-const requestURL = ""
+// const requestURL = ""
 const cityInput = document.querySelector("#citySearch");
 const submitBtn = document.querySelector("#submit");
 
@@ -43,15 +43,17 @@ function showWeather(lat, lon) {
         return response.json();
     })
     .then(function(weather) {
-        // START HERE
         //create variables for each datatype needed
-        // const weatherVal = {time, temp, wind, humidity}
-        // const weatherVal.time is the time 
+        const currentWeath = weather;
+        const currentTemp = weather.main.temp;
+        const currentWind = weather.wind.speed;
+        const currentHum = weather.main.humidity;
 
         //create html styling for each variable
         // this will be in "#current" div
 
         console.log(weather);
+        console.log(currentHum);
         
         
     })
@@ -62,7 +64,7 @@ function showWeather(lat, lon) {
 function showForecast(lat, lon) {
     //pull forecast data from openweather
     // NEED TO set search parameters to 5 days rather than every 3 hours
-    // each array item is 3 hours, so each 8 hours is 1 day. 
+    // each array item is 3 hours, so each 8 indices is 1 day. 
     // can target array 8, 16, 24, 32, 40 for each 24 hour period
     return fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=304e6560d21d5b309a457696f7869351&units=imperial`)
     .then(function(response) {
@@ -70,14 +72,13 @@ function showForecast(lat, lon) {
     })
     .then(function(weather) {
         //create variables for each datatype needed
-        //
-        // const weatherVal = 
+        const forecastVal = weather.list[7, 15, 23, 31, 39];
         console.log(weather);
+        console.log(forecastVal);
         //run a for loop for a 5 day period
         //create html styling for each day 
         // will be in the "#forecast" div
         
-
     })
 }
 
