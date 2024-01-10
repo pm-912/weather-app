@@ -1,7 +1,10 @@
 // const requestURL = ""
 const cityInput = document.querySelector("#citySearch");
 const submitBtn = document.querySelector("#submit");
-
+const forecastCont = document.querySelector("#forecast");
+const currentCont = document.querySelector("#current");
+let cityArray = JSON.parse(localStorage.getItem("cityArray")) || [];
+const searchHis = document.querySelector("#recent");
 // search for the city that the user has input
 function citySearch(event) {
     event.preventDefault();
@@ -10,6 +13,24 @@ function citySearch(event) {
     // outputs the city name as userSearch
     // then run function to get coordinates
     getCoords(userSearch);
+    saveCity(userSearch);
+    // clear form after search
+}
+
+function saveCity(search) {
+    const cityBtn = document.createElement("button");
+    cityBtn.textContent=search;
+    searchHis.append(cityBtn);
+    // Add search to localstorage
+    // JSON.stringify
+    cityArray.push(search);
+    localStorage.setItem("cityArray", JSON.stringify(cityArray));
+}
+
+for (let i = 0; i < cityArray.length; i++) {
+    const cityBtn = document.createElement("button");
+    cityBtn.textContent=cityArray[i];
+    searchHis.append(cityBtn);
 }
 
 function getCoords(city) {
@@ -37,6 +58,7 @@ function getCoords(city) {
 // Function to pull the current weather of searched location
 // API call and pull relevant data (Current time, Temp, Wind speed, Humidity)
 function showWeather(lat, lon) {
+    const clearCard=""
     //pull weather data from openweather
     return fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=304e6560d21d5b309a457696f7869351&units=imperial`)
     .then(function(response) {
@@ -44,16 +66,26 @@ function showWeather(lat, lon) {
     })
     .then(function(weather) {
         //create variables for each datatype needed
+        // clear current div
+        currentCont.innerHTML = clearCard;
         const currentWeath = weather;
-        const currentTemp = weather.main.temp;
-        const currentWind = weather.wind.speed;
-        const currentHum = weather.main.humidity;
-
-        //create html styling for each variable
+        const currentCond = [weather.main.temp, weather.main.humidity, weather.wind.speed];
+        // create html styling for container
+        // create html styling for each variable
         // this will be in "#current" div
-
+        const weatherDiv = `<div id="current" class="col col-9 text-center">
+        <p class="h2">Currrent Weather for</p>
+        <br>
+        <p>Temperature: ${currentCond[0]}°F</p>
+        <br>
+        <p>Humidity: ${currentCond[1]}%</p>
+        <br>
+        <p>Wind Speed: ${currentCond[2]} mph</p>
+        </div>`
+        currentCont.insertAdjacentHTML("afterend", weatherDiv);
+        
+        console.log(currentCond);
         console.log(weather);
-        console.log(currentHum);
         
         
     })
@@ -71,10 +103,33 @@ function showForecast(lat, lon) {
         return response.json();
     })
     .then(function(weather) {
+        //clear forecast div
         //create variables for each datatype needed
-        const forecastVal = weather.list[7, 15, 23, 31, 39];
+        // const forecastVal = weather.list[7, 15, 23, 31, 39];
+        forecastCont.innerHTML = "";
+        for (let i = 4; i < weather.list.length; i+=8) {
+            console.log(weather.list[i]);
+
+            const forecastDiv =`
+            <card class="card">${weather.list[i].main.humidity} 
+            <p class="h2">Currrent Weather for</p>
+            <br>
+            <p>Temperature: ${weather.list[i].main.humidity}°F</p>
+            <br>
+            <p>Humidity: ${weather.list[i].main.humidity}%</p>
+            <br>
+            <p>Wind Speed: ${weather.list[i].main.humidity} mph</p></card>
+            `
+
+
+
+            forecastCont.insertAdjacentHTML("beforeend", forecastDiv)
+        }
+
+        // }
+
+
         console.log(weather);
-        console.log(forecastVal);
         //run a for loop for a 5 day period
         //create html styling for each day 
         // will be in the "#forecast" div
@@ -85,7 +140,7 @@ function showForecast(lat, lon) {
 //create a function to save the data into local storage
 //that will show up in a div called "recent searches"
 //clicking on one of those links will take you to the weather of that city
-
+// set searched city as value of key "Recent"
 
 
 submitBtn.addEventListener("submit", citySearch);

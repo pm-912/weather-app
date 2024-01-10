@@ -1,0 +1,12 @@
+.form-div {
+    height: 100%
+}
+.card {
+    width: 15%;
+}
+
+#forecast {
+    display:flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+}

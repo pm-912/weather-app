@@ -6,31 +6,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="./assets/style.css">
   <title>What's the Weather</title>
 </head>
 
 <body>
     <header>
-        <h1 class="container-fluid">What's the Weather?</h1>
+        <h1 class="container-fluid text-center">What's the Weather?</h1>
     </header>
 
     <main class="row">
-        <!-- first div will be left column search bar-->
-        <form id="submit" class="col col-2">
+        <!-- first div will be left column search bar
+              should this be an aside? with two rows?-->
+        <div class="col col-3 form-div">     
+        <form id="submit" class="">
             <label for="citySearch" class="form-label">City Search</label>
             <input id="citySearch" type="text" class="form-control" aria-describedby="cityHelp">
             <div id="cityHelp" class="form-text">Enter the name of a city.</div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
-        <div id="recent" class="col col-2">
-            <!-- this will be populated with the recent searches
-                  or do I want them to be populated below the search bar? -->
+        <div id="recent"></div>
         </div>
-        <!-- third div will be the city, date, and current weather -->
-        <div id="current"></div>
-        <!-- last div will have the 5 day forecast -->
-        <div id="forecast"></div>
 
+        <div class="col col-9">
+        <!-- this will be populated with the current weather-->
+        <div id="current">
+          <!-- third div will be the city, date, and current weather -->         
+        </div>
+        <div id="forecast">
+          <!-- last div will have the 5 day forecast -->
+        </div>
+        </div>
     </main>
 
     <script></script>
