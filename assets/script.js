@@ -46,7 +46,7 @@ function showWeather(lat, lon) {
         // START HERE
         //create variables for each datatype needed
         // const weatherVal = {time, temp, wind, humidity}
-        // const 
+        // const weatherVal.time is the time 
 
         //create html styling for each variable
         // this will be in "#current" div
@@ -61,6 +61,9 @@ function showWeather(lat, lon) {
 // API call and pull relevant data (Date, Temp, Wind speed, Humidity)
 function showForecast(lat, lon) {
     //pull forecast data from openweather
+    // NEED TO set search parameters to 5 days rather than every 3 hours
+    // each array item is 3 hours, so each 8 hours is 1 day. 
+    // can target array 8, 16, 24, 32, 40 for each 24 hour period
     return fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=304e6560d21d5b309a457696f7869351&units=imperial`)
     .then(function(response) {
         return response.json();
