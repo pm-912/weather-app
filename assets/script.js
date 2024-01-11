@@ -35,30 +35,22 @@ function saveCity(search) {
         localStorage.setItem("cityArray", JSON.stringify(cityArray));
     }
     submitBtn.reset();
-    renderBtn();
 }
 
 // This function 
 function renderBtn() {
-    searchHis.innerHTML = "";
-    cityArray.forEach((city) => {
-        let cityBtn = document.createElement("button");
-        cityBtn.textContent = city.name;
+    for (let i = 0; i < cityArray.length; i++) {
+        const cityBtn = document.createElement("button");
+        cityBtn.id = "search";
+        cityBtn.textContent = cityArray[i];
         searchHis.append(cityBtn);
-    })
+        cityBtn.addEventListener("click", () => getCoords(cityArray[i]));
+    }
 }
 
 renderBtn();
 //This code should save to local storage whatever city is input into the search field, then create a button for that city that the user can click to access
 // append the recent searches on page load
-for (let i = 0; i < cityArray.length; i++) {
-    // let uniqueCity = [...new Set(cityArray)];
-    const cityBtn = document.createElement("button");
-    cityBtn.id = "search";
-    cityBtn.textContent = cityArray[i];
-    searchHis.append(cityBtn);
-    cityBtn.addEventListener("click", () => getCoords(cityArray[i]));
-}
 
 function getCoords(city) {
     // compare user search with openweather database
