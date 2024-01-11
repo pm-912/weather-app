@@ -30,5 +30,5 @@ BCS Learning Assistant
 
 [The deployed website](https://pm-912.github.io/weather-app)
 
-![screenshot](./Assets/images/screenshot.png)
+![screenshot](/assets/images/screenshot.png)
 
