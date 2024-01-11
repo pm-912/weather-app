@@ -37,8 +37,10 @@ function saveCity(search) {
     submitBtn.reset();
 }
 
-// This function 
+// This function renders the buttons onto the page, and gives them
+// functionality to search for the city.
 function renderBtn() {
+    searchHis.innerHTML = "";
     for (let i = 0; i < cityArray.length; i++) {
         const cityBtn = document.createElement("button");
         cityBtn.id = "search";
@@ -48,53 +50,37 @@ function renderBtn() {
     }
 }
 
-renderBtn();
-//This code should save to local storage whatever city is input into the search field, then create a button for that city that the user can click to access
-// append the recent searches on page load
-
+// This function uses the city that was searched as an input to get the coordinates of the city
 function getCoords(city) {
-    // compare user search with openweather database
     currentCont.textContent = "";
     if (city) {
-        // pull lat and lon from city data
         return fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=304e6560d21d5b309a457696f7869351`)
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                const closestMatch = data[0];
-                const latCoords = closestMatch.lat;
-                const lonCoords = closestMatch.lon;
-                console.log(data);
-                console.log(latCoords, lonCoords);
-                showWeather(latCoords, lonCoords);
-                showForecast(latCoords, lonCoords);
-
-                // also run a showForecast function which will do the same
-                // thing as showWeather, but for 
-            })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            const closestMatch = data[0];
+            const latCoords = closestMatch.lat;
+            const lonCoords = closestMatch.lon;
+            showWeather(latCoords, lonCoords);
+            showForecast(latCoords, lonCoords);
+        })
     }
 }
 
 
-// Function to pull the current weather of searched location
-// API call and pull relevant data (Current time, Temp, Wind speed, Humidity)
+// This function will get the current weather data for the location
+// and then render it onto the screen with the included HTML
 function showWeather(lat, lon) {
-    // currentCont.textContent = "";
-    //pull weather data from openweather
     return fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=304e6560d21d5b309a457696f7869351&units=imperial`)
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (weather) {
-            //create variables for each datatype needed
-            const currentCond = [weather.name, weather.main.temp, weather.main.humidity, weather.wind.speed];
-            // create html styling for container    
-            // create html styling for each variable
-            // this will be in "#current" div
-            const iconCode = weather.weather[0].icon;
-            const icon = "https://openweathermap.org/img/wn/" + iconCode + ".png"
-            const weatherDiv = `<div class="col col-9 text-center">
+    .then(function (response) {
+        return response.json();
+    })
+    .then(function (weather) {
+        const currentCond = [weather.name, weather.main.temp, weather.main.humidity, weather.wind.speed];
+        const iconCode = weather.weather[0].icon;
+        const icon = "https://openweathermap.org/img/wn/" + iconCode + ".png"
+        const weatherDiv = `<div class="col col-9 text-center">
         <p class="h2">${currentCond[0]} weather for ${dayjs().format("MMM, DD, YYYY")}</p> <img src="${icon}"></img>
         <br>
         <p>Temperature: ${currentCond[1]}°F</p>
@@ -104,57 +90,44 @@ function showWeather(lat, lon) {
         <p>Wind Speed: ${currentCond[3]} mph</p>
         </div>
         <div id="current" cla`;
-            //add data to page
-            currentCont.insertAdjacentHTML("afterbegin", weatherDiv);
-
-            console.log(currentCond);
-            console.log(weather);
-
-
-        })
+        currentCont.insertAdjacentHTML("afterbegin", weatherDiv);
+    })
 }
 
-// Function to pull 5 day forecast of searched location
-// API call and pull relevant data (Date, Temp, Wind speed, Humidity)
+// This function will get the 5 day forecast for the location
+// It is then rendered to the screen for each day
 function showForecast(lat, lon) {
-    //pull forecast data from openweather
-    // NEED TO set search parameters to 5 days rather than every 3 hours
-    // each array item is 3 hours, so each 8 indices is 1 day. 
-    // can target array 8, 16, 24, 32, 40 for each 24 hour period
     return fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=304e6560d21d5b309a457696f7869351&units=imperial`)
-        .then(function (response) {
-            return response.json();
-        })
-        .then(function (weather) {
-            //clear forecast div
-            //create variables for each datatype needed
-            // const forecastVal = weather.list[7, 15, 23, 31, 39];
-            forecastCont.innerHTML = "";
-            for (let i = 4; i < weather.list.length; i += 8) {
-                console.log(weather.list[i]);
-                let foreDate = weather.list[i].dt_txt;
-                let iconImg = weather.list[i].weather[0].icon;
-                let icon = "https://openweathermap.org/img/wn/" + iconImg + ".png";
-
-                const forecastDiv = `
+    .then(function (response) {
+        return response.json();
+    })
+    .then(function (weather) {
+        // First clear the previous forecast
+        forecastCont.innerHTML = "";
+        // This iterates for each 24 hour period
+        for (let i = 4; i < weather.list.length; i += 8) {
+            console.log(weather.list[i]);
+            let foreDate = weather.list[i].dt_txt;
+            let iconImg = weather.list[i].weather[0].icon;
+            let icon = "https://openweathermap.org/img/wn/" + iconImg + ".png";
+            
+            const forecastDiv = `
             <card class="card text-center d-flex"> <p class="h2">${dayjs(foreDate).format("MMM DD")}</p><img src="${icon}" class="img-fluid align-items-center" width="75" height="75"></img>
             <br>
             <p>Temperature: ${weather.list[i].main.temp}°F</p>
             <br>
             <p>Humidity: ${weather.list[i].main.humidity}%</p>
             <br>
-            <p>Wind Speed: ${weather.list[i].wind.speed} mph</p></card>
-            `
-                forecastCont.insertAdjacentHTML("beforeend", forecastDiv);
-            }
-
-            // }
-
-
-            console.log(weather);
-
-        })
+            <p>Wind Speed: ${weather.list[i].wind.speed} mph</p></card>`
+            forecastCont.insertAdjacentHTML("beforeend", forecastDiv);
+        }
+    })
 }
+
+// Renders the buttons from local storage on page load
+renderBtn();
+//default city to show the weather of
 showWeather(40.4406, -79.9959);
 showForecast(40.4406, -79.9959);
+
 submitBtn.addEventListener("submit", citySearch);
