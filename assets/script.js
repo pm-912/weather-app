@@ -5,12 +5,13 @@ const currentCont = document.getElementById("current");
 const forecastCont = document.querySelector("#forecast");
 let cityArray = JSON.parse(localStorage.getItem("cityArray")) || [];
 
-// search for the city that the user has input
+// This function saves the value of whatever the user input in the search field
+
 function citySearch(event) {
     event.preventDefault();
-    // outputs the city name as userSearch
     const userSearch = cityInput.value.trim();
-    // then run functions to get coordinates and save
+    // If the value is truthy, it runs functions to get the coordinates 
+    // and save the city in local storage
     if (userSearch) {
         getCoords(userSearch);
         saveCity(userSearch);
@@ -22,9 +23,9 @@ function citySearch(event) {
     }
 }
 
-// save the city into local storage
+// This function adds the city that is searched to local storage, as long as it is not already there.
 function saveCity(search) {
-    let existingCity = cityArray.find((savedCity) => savedCity.name === search.name);
+    let existingCity = cityArray.find((savedCity) => savedCity === search);
 
     if (existingCity) {
         existingCity.temperature = search.temperature;
@@ -35,9 +36,9 @@ function saveCity(search) {
     }
     submitBtn.reset();
     renderBtn();
-    
 }
 
+// This function 
 function renderBtn() {
     searchHis.innerHTML = "";
     cityArray.forEach((city) => {
@@ -48,7 +49,7 @@ function renderBtn() {
 }
 
 renderBtn();
-
+//This code should save to local storage whatever city is input into the search field, then create a button for that city that the user can click to access
 // append the recent searches on page load
 for (let i = 0; i < cityArray.length; i++) {
     // let uniqueCity = [...new Set(cityArray)];
@@ -163,5 +164,5 @@ function showForecast(lat, lon) {
         })
 }
 showWeather(40.4406, -79.9959);
-showForecast(40.4406, -79.9959)
+showForecast(40.4406, -79.9959);
 submitBtn.addEventListener("submit", citySearch);
